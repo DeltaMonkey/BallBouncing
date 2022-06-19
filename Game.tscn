@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
+
+[node name="Game" type="Node2D"]
+
+[node name="collission" type="Node2D" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="collission" groups=["wall"]]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="collission/StaticBody2D"]
+polygon = PoolVector2Array( 0, 0, 577, 0, 577, 1024, -1, 1024, 0, 2, -5, -1, -6, 1041, 591, 1041, 590, -33, -24, -33 )
+
+[node name="player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 288, 887 )
+
+[node name="player2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 106, 800 )
+
+[node name="player3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 488, 788 )
+
+[connection signal="vector_created" from="player/TouchController" to="player" method="_on_TouchController_vector_created"]
+[connection signal="vector_created" from="player2/TouchController" to="player2" method="_on_TouchController_vector_created"]
+[connection signal="vector_created" from="player3/TouchController" to="player3" method="_on_TouchController_vector_created"]
+
+[editable path="player"]
+[editable path="player2"]
+[editable path="player3"]
