@@ -14,15 +14,24 @@ func _process(delta):
 		velocity.y = linear_velocity.y * (newSpeed / oldSpeed)
 		linear_velocity = velocity
 
-func _on_wallChecker_body_entered(body):
-	if body.is_in_group("wall") || body.is_in_group("ball"):
-		print("isOnWall")
-		isOnWall = true
+func _on_wallChecker_body_entered(body: Node):
+	if body.is_in_group("wall"): 
+		SetIsOnWall(true)
+		return
+		
+	if body.is_in_group("ball") && body.get_instance_id() != get_instance_id():
+		SetIsOnWall(true)
 
-func _on_wallChecker_body_exited(body):
-	if body.is_in_group("wall") || body.is_in_group("ball") :
-		print("notTouching")
-		isOnWall = false
+func _on_wallChecker_body_exited(body: Node):
+	if body.is_in_group("wall"): 
+		SetIsOnWall(false)
+		return
+		
+	if body.is_in_group("ball") && body.get_instance_id() != get_instance_id():
+		SetIsOnWall(false)
+		
+func SetIsOnWall(isOnWall: bool):
+	self.isOnWall = isOnWall
 
 func _on_TouchController_vector_created(force: Vector2):
 	linear_velocity = force * speed

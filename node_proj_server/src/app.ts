@@ -3,12 +3,15 @@ import http from 'http';
 import WebSocket from 'ws'
 import { AddressInfo } from 'node:net';
 import * as dotenv from "dotenv";
+import { connection } from './hubs/index';
 
 export class app {
 
     private app: express.Express;
     private server: http.Server;
     private wss: WebSocket.Server<WebSocket.WebSocket>;
+
+    private connection: connection;
 
     constructor(){
         this.app = express()
@@ -28,19 +31,7 @@ export class app {
             else console.log(`Server coult not started`);
         });
 
-        this.initConnections();
-    }
-
-    initConnections() {
-        this.wss.on('connection', (ws: WebSocket) => {
-
-            ws.on('message', (message: string) => {
-                console.log('received: %s', message);
-                ws.send(`Hello, you sent -> ${message}`);
-            });
-    
-            ws.send('Hi there, I am a WebSocket server');
-        });
+        this.connection = new connection(this.wss);
     }
 }
 
