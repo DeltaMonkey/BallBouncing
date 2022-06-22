@@ -3,7 +3,9 @@ import http from 'http';
 import WebSocket from 'ws'
 import { AddressInfo } from 'node:net';
 import * as dotenv from "dotenv";
-import { connection } from './hubs/index';
+import { HandShake } from './hubs/HandShake';
+import { State } from './domain/State';
+import { StartRoom } from './hubs/StartRoom';
 
 export class app {
 
@@ -11,12 +13,16 @@ export class app {
     private server: http.Server;
     private wss: WebSocket.Server<WebSocket.WebSocket>;
 
-    private connection: connection;
+    private state: State;
+
+    private handShake: HandShake;
+    private startRoom: StartRoom;
 
     constructor(){
         this.app = express()
         this.server = http.createServer(this.app);
         this.wss = new WebSocket.Server( { server: this.server } );
+        this.state = new State();
 
         dotenv.config();
 
@@ -31,7 +37,8 @@ export class app {
             else console.log(`Server coult not started`);
         });
 
-        this.connection = new connection(this.wss);
+        this.startRoom = new StartRoom();
+        this.handShake = new HandShake(this.wss, this.state, this.startRoom);
     }
 }
 
